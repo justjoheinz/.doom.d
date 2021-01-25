@@ -26,9 +26,9 @@ Install dependencies and the =.emacs.d= directory as per installation instructio
 
 - =C-c RET= :: insert new headline
 - =M-Ret= :: insert new list item
-- =C-c C-d :: deadline
-- =C-c C-s :: schedule
-- =C-c C-t :: TODO switch state
+- =C-c C-d= :: deadline
+- =C-c C-s= :: schedule
+- =C-c C-t= :: TODO switch state
 - =C-c .= :: insert timestamp
 - =SPC n j j= :: insert journal entry today
 - =SPC n j J= :: schedule journal entry
