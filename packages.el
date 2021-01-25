@@ -6,7 +6,7 @@
 ;; use 'M-x doom/reload'.
 
 (package! olivetti)
-
+(package! org-roam-server)
 ;; To install SOME-PACKAGE from MELPA, ELPA or emacsmirror:
 ;(package! some-package)
 
