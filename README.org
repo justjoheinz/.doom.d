@@ -1,0 +1,36 @@
+#+TITLE:
+#+DATE:    Januar 25, 2021
+#+SINCE:   <replace with next tagged release version>
+#+STARTUP: inlineimages nofold
+
+* Table of Contents :TOC_3:noexport:
+- [[#description][Description]]
+- [[#prerequisites][Prerequisites]]
+- [[#keybindings][Keybindings]]
+  - [[#org-mode-related][Org Mode related]]
+
+* Description
+
+Common configuration for doom emacs with emphasis on
+
+- common lisp
+- org mode
+
+* Prerequisites
+
+Install dependencies and the =.emacs.d= directory as per installation instructions on the doom emacs web site. Checkout this repository to your =.doom.d= directory and run =doom sync= from the =.emacs.d= folder.
+
+* Keybindings
+
+** Org Mode related
+
+- =C-c RET= :: insert new headline
+- =M-Ret= :: insert new list item
+- =C-c C-d :: deadline
+- =C-c C-s :: schedule
+- =C-c C-t :: TODO switch state
+- =C-c .= :: insert timestamp
+- =SPC n j j= :: insert journal entry today
+- =SPC n j J= :: schedule journal entry
+- =SPC n a= :: open agenda
+- =SPC n X= :: open capture
