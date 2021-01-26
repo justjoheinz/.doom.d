@@ -28,7 +28,12 @@
 (setq doom-theme 'doom-one)
 
 ;; use a slightly bigger font
-(setq doom-font (font-spec :family "Fira Code" :size 14))
+(setq doom-font (font-spec :family "Fira Code" :size 16))
+
+;; setup Mac keybindings for copy, paste, cut
+(bind-key "s-x" 'kill-region)
+(bind-key "s-c" 'evil-yank)
+(bind-key "s-v" 'evil-paste-after)
 
 ;; If you use `org' and don't want your org files in the default location below,
 ;; change `org-directory'. It must be set before org loads!
@@ -80,7 +85,8 @@
         (insert template "\n\n")))))
 
 (add-hook! org-journal-after-header-create #'journal-template)
-
+(add-hook! org-mode auto-save-visited-mode)
+(add-hook! 'auto-save-hook #'org-save-all-org-buffers)
 ;; switch to full screen on startup
 (add-to-list 'initial-frame-alist '(fullscreen . maximized))
 
