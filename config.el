@@ -30,6 +30,9 @@
 ;; use a slightly bigger font
 (setq doom-font (font-spec :family "Fira Code" :size 16))
 
+;; company mode
+(setq company-idle-delay 0.2)
+
 ;; setup Mac keybindings for copy, paste, cut
 (bind-key "s-x" 'kill-region)
 (bind-key "s-c" 'evil-yank)
