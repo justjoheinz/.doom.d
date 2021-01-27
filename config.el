@@ -47,6 +47,7 @@
 (setq org-journal-time-format "")
 (setq org-tag-alist '(("private" . ?p)
                       ("work"    . ?w)))
+(setq org-log-into-drawer "LOGBOOK")
 (setq org-journal-skip-carryover-drawers '("LOGBOOK"))
 (require 'org-habit)
 (require 'org-clock)
