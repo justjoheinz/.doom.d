@@ -4,6 +4,7 @@
 
 - After modifications to this file do not forget to invoke =doom sync=.
 - Edit code blocks with =C-c '= for code completion and the nifty features of the major emacs lisp mode.
+- Do not forget to mark source blocks with =emacs-lisp= otherwise they do not get tangled into the resulting =config.el= file.
 
 * Config.org
 
@@ -63,7 +64,7 @@ Bind the CMD key to normal copy/cut/paste operations.
 
 Enable olivetti mode for all text modes.
 
-#+begin_src
+#+begin_src emacs-lisp
 (use-package! olivetti
   :init
   (setq olivetti-body-width 100)
