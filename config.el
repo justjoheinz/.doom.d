@@ -9,6 +9,10 @@
 (setq user-full-name "Markus Klink"
       user-mail-address "justjoheinz@gmail.com")
 
+;; setup roswll
+(setq exec-path (append exec-path '("/usr/local/bin")))
+(load (expand-file-name "~/.roswell/helper.el"))
+
 ;; Doom exposes five (optional) variables for controlling fonts in Doom. Here
 ;; are the three important ones:
 ;;
@@ -95,7 +99,7 @@
 (add-to-list 'initial-frame-alist '(fullscreen . maximized))
 
 (use-package! olivetti
-  :config
+  :init
   (setq olivetti-body-width 100)
   :hook
   (text-mode . olivetti-mode))
