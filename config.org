@@ -87,6 +87,7 @@ Enable olivetti mode for all text modes.
                       ("work"    . ?w)))
 (setq org-log-into-drawer "LOGBOOK")
 (setq org-journal-skip-carryover-drawers '("LOGBOOK"))
+(require 'org-habit)
 (after! org
   (add-to-list 'org-modules 'org-habit t)
   (setq org-agenda-files '("~/org" "~/org/roam" "~/org/journal"))
@@ -130,8 +131,6 @@ Enable olivetti mode for all text modes.
 (add-hook! org-mode auto-save-visited-mode)
 (add-hook! 'auto-save-hook #'org-save-all-org-buffers)
 
-
-
 (after! org-roam
   (org-roam-server-mode t))
 #+end_src
@@ -143,14 +142,22 @@ Enable olivetti mode for all text modes.
 #+begin_src emacs-lisp
 (map! :leader
       (:prefix ("j" . "journal") ;; org-journal bindings
-        :desc "Create new journal entry" "j" #'org-journal-new-entry
+        :desc "Create journal entry" "j" #'org-journal-new-entry
+        :desc "Create scheduled entry" "J" #'org-journal-new-scheduled-entry
         :desc "Open current journal" "f" #'org-journal-open-current-journal-file
         :desc "Open previous entry" "p" #'org-journal-open-previous-entry
         :desc "Open next entry" "n" #'org-journal-open-next-entry
         :desc "Search journal" "s" #'org-journal-search-forever
         :desc "Clock in" "i" #'org-clock-in
-        :desc "Clock out" "o" #'org-clock-out))
+        :desc "Clock out" "o" #'org-clock-out
+        :desc "Export" "e" #'org-export-dispatch
+        :desc "Agenda" "a" #'org-agenda-list
+        (:prefix ("r" . "roam")
+         :desc "Find file" "f" #'org-roam-find-file)))
 #+end_src
+
+#+RESULTS:
+: org-export-dispatch
 
 * Misc
 
