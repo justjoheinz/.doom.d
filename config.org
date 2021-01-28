@@ -53,7 +53,7 @@ Bind the CMD key to normal copy/cut/paste operations.
 
 #+begin_src emacs-lisp
 ;; setup Mac keybindings for copy, paste, cut
-(when (eq system-type 'darwin)
+(when IS-MAC
   (bind-key "s-x" 'kill-region)
   (bind-key "s-c" 'evil-yank)
   (bind-key "s-v" 'evil-paste-after)
@@ -87,13 +87,13 @@ Enable olivetti mode for all text modes.
                       ("work"    . ?w)))
 (setq org-log-into-drawer "LOGBOOK")
 (setq org-journal-skip-carryover-drawers '("LOGBOOK"))
-(require 'org-habit)
-(require 'org-clock)
 (after! org
+  (add-to-list 'org-modules 'org-habit t)
   (setq org-agenda-files '("~/org" "~/org/roam" "~/org/journal"))
   (setq org-journal-enable-agenda-integration t)
   (setq org-tags-column 70)
   (org-agenda-files t)
+
   (setq org-latex-classes '(("article" "\\documentclass[11pt]{scrartcl}"
                              ("\\section{%s}" . "\\section*{%s}")
                              ("\\subsection{%s}" . "\\subsection*{%s}")
