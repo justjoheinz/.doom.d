@@ -136,6 +136,22 @@ Enable olivetti mode for all text modes.
   (org-roam-server-mode t))
 #+end_src
 
+* Various keybindings
+
+=SPC j= for org-journal and clock functionality
+
+#+begin_src emacs-lisp
+(map! :leader
+      (:prefix ("j" . "journal") ;; org-journal bindings
+        :desc "Create new journal entry" "j" #'org-journal-new-entry
+        :desc "Open current journal" "f" #'org-journal-open-current-journal-file
+        :desc "Open previous entry" "p" #'org-journal-open-previous-entry
+        :desc "Open next entry" "n" #'org-journal-open-next-entry
+        :desc "Search journal" "s" #'org-journal-search-forever
+        :desc "Clock in" "i" #'org-clock-in
+        :desc "Clock out" "o" #'org-clock-out))
+#+end_src
+
 * Misc
 
 Here are some additional functions/macros that could help you configure Doom:
