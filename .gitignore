@@ -1,3 +1,5 @@
 custom.el
 config.el
 *~
++*.org
++*.el
