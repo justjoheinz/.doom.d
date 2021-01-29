@@ -1,5 +1,10 @@
 #+title: Config.org
 #+options: title:nil toc:nil
+
+* Install
+
+- It might be required to execute =M-x pdf-tools-install= when you first start doom emacs.
+
 * Hints
 
 - After modifications to this file do not forget to invoke =doom sync=.
@@ -8,23 +13,11 @@
 
 * Config.org
 
-** User and email setup
-
-** TODO get these from the environment
-
-Some functionality uses this to identify you, e.g. GPG configuration, email
-clients, file templates and snippets.
-
-#+begin_src emacs-lisp
-(setq user-full-name "Markus Klink"
-      user-mail-address "justjoheinz@gmail.com")
-#+end_src
-
 ** Common lisp and roswell setup
 
 #+begin_src emacs-lisp
 (setq exec-path (append exec-path '("/usr/local/bin")))
-(load (expand-file-name "~/.roswell/helper.el"))
+(load! "helper" "~/.roswell")
 #+end_src
 
 ** UI setup
@@ -198,6 +191,10 @@ You can toggle the inclusion of  integration by commenting sections of the org f
 ** GCal integration
 
 #+include: "+gcal.org"
+
+** User integration
+
+#+include: "+user.org"
 
 
 * Misc
