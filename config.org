@@ -47,6 +47,29 @@ I do not like to wait for code completion hence make the idle delay faster.
 (setq company-idle-delay 0.2)
 #+end_src
 
+
+** Scratch buffer
+
+It is nice to be able to explore emacs lisp within the scratch buffer.
+
+#+begin_src emacs-lisp
+(setq initial-major-mode 'lisp-interaction-mode)
+#+end_src
+
+#+RESULTS:
+: lisp-interaction-mode
+
+** Smartparens
+
+I hate it when ='= and ="= are treated like pairs, because it disturbs my typing flow.
+
+*** TODO fix ' - this does not work yet, and the config dies.
+
+#+begin_src emacs-lisp
+(after! smartparens
+    (sp-pair "\"" nil :actions :rem))
+#+end_src
+
 ** Mac setup
 
 Bind the CMD key to normal copy/cut/paste operations.
@@ -131,8 +154,8 @@ Enable olivetti mode for all text modes.
 (add-hook! org-mode auto-save-visited-mode)
 (add-hook! 'auto-save-hook #'org-save-all-org-buffers)
 
-(after! org-roam
-  (org-roam-server-mode t))
+(after! (org-roam server)
+  (org-roam-server-mode +1))
 #+end_src
 
 * Various keybindings
@@ -152,9 +175,10 @@ Enable olivetti mode for all text modes.
                 :desc "Export" "e" #'org-export-dispatch
                 :desc "Agenda" "a" #'org-agenda-list
                 )
-        (:prefix ("c" . "clock")
+        (:prefix ("c" . "clock/dates")
                 :desc "Clock in" "i" #'org-clock-in
                 :desc "Clock out" "o" #'org-clock-out
+                :desc "Insert timestamp" "t" #'org-time-stamp
                 )
         (:prefix ("p" . "properties")
                 :desc "Set property" "p" #'org-set-property
@@ -163,6 +187,18 @@ Enable olivetti mode for all text modes.
                 :desc "Find file" "f" #'org-roam-find-file
                 )))
 #+end_src
+
+#+RESULTS:
+: org-roam-find-file
+
+* Integrations with private information
+
+You can toggle the inclusion of  integration by commenting sections of the org file using =C-c ;= or by creating an empty dummy file.
+
+** GCal integration
+
+#+include: "+gcal.org"
+
 
 * Misc
 
