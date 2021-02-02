@@ -35,6 +35,22 @@ Just use a nice and big font and the default theme. And do not display line numb
 (blink-cursor-mode +1)
 #+end_src
 
+
+Additionally we can set the browser to the internal webkit browser if the xwidgets feature is available.
+
+#+begin_src emacs-lisp
+(when (featurep 'xwidget-internal)
+  (setq browse-url-browser-function 'xwidget-webkit-browse-url))
+#+end_src
+
+Set up Alt-Cmd-left/right to switch between buffers:
+
+#+begin_src emacs-lisp
+(when IS-MAC
+  (map! :desc "Switch to previous buffer" "M-s-left" 'previous-buffer
+        :desc "Switch to next buffer" "M-s-right" 'next-buffer))
+#+end_src
+
 ** Company setup
 
 I do not like to wait for code completion hence make the idle delay faster.
@@ -51,9 +67,6 @@ It is nice to be able to explore emacs lisp within the scratch buffer.
 #+begin_src emacs-lisp
 (setq initial-major-mode 'lisp-interaction-mode)
 #+end_src
-
-#+RESULTS:
-: lisp-interaction-mode
 
 ** Smartparens
 
@@ -165,7 +178,7 @@ Do not log rest resquest to *Messages*.
 
 #+begin_src emacs-lisp
 (defun custom/kill-this-buffer ()
-  "Kill the current buffe"
+  "Kill the current buffer"
   (interactive)
   (kill-buffer (current-buffer)))
 
