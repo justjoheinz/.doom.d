@@ -126,6 +126,7 @@ Do not log rest resquest to *Messages*.
                       ("work"    . ?w)))
 (setq org-log-into-drawer "LOGBOOK")
 (setq org-journal-skip-carryover-drawers '("LOGBOOK"))
+(setq org-startup-with-inline-images t)
 (require 'org-habit)
 (after! org
   (add-to-list 'org-modules 'org-habit t)
