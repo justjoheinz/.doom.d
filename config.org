@@ -47,8 +47,8 @@ Set up Alt-Cmd-left/right to switch between buffers:
 
 #+begin_src emacs-lisp
 (when IS-MAC
-  (map! :desc "Switch to previous buffer" "M-s-left" 'previous-buffer
-        :desc "Switch to next buffer" "M-s-right" 'next-buffer))
+  (map! :desc "Switch to previous buffer" "<M-s-left>" 'previous-buffer
+        :desc "Switch to next buffer" "<M-s-right>" 'next-buffer))
 #+end_src
 
 ** Company setup
@@ -157,6 +157,7 @@ Do not log rest resquest to *Messages*.
                '("AUTO" "babel" t ("pdflatex")))
   (setq org-clock-persist t)
   (org-clock-persistence-insinuate)
+  (define-key org-mode-map (kbd "C-c C-r") verb-command-map)
   )
 
 ;; Insert a clocktable in each journal entry after creation
