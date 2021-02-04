@@ -27,7 +27,9 @@ Just use a nice and big font and the default theme. And do not display line numb
 #+begin_src emacs-lisp
 (setq doom-theme 'doom-one
       doom-font (font-spec :family "Fira Code" :size 16)
-      display-line-numbers-type nil)
+      display-line-numbers-type nil
+      doom-themes-enable-bold t
+      doom-themes-enable-italic t)
 
 (add-to-list 'initial-frame-alist '(fullscreen . fullheight))
 (add-to-list 'initial-frame-alist '(width . 90))
@@ -111,6 +113,38 @@ Do not log rest resquest to *Messages*.
 (setq restclient-log-request nil)
 #+end_src
 
+** Helper functions
+
+Kill the current buffer immediately without asking which buffer to kill.
+#+begin_src emacs-lisp
+(defun custom/kill-this-buffer ()
+  "Kill the current buffer"
+  (interactive)
+  (kill-buffer (current-buffer)))
+
+(global-set-key (kbd "C-x k") 'custom/kill-this-buffer)
+#+end_src
+
+Template function for new org-journal entries.
+
+#+begin_src emacs-lisp
+(defun custom/journal-template-header ()
+  "Function to insert a clocktable after creating a new journal"
+  (save-excursion
+    (let* ((odoo-url "[[https://odoo.inoio.de/web?#page=0&limit=80&view_type=list&model=hr.analytic.timesheet&action=731][Buchen]]")
+           (template (concat "\n\n"
+                             "#+BEGIN: clocktable :scope subtree :maxlevel 2\n"
+                             "#+END:\n\n"
+                             "** TODO "
+                             odoo-url
+                             " :work:\n")))
+      (insert template))))
+#+end_src
+
+#+RESULTS:
+: custom/journal-template-header
+
+
 ** org mode setup
 
 ** TODO org mode setup needs more structure
@@ -127,6 +161,7 @@ Do not log rest resquest to *Messages*.
 (setq org-log-into-drawer "LOGBOOK")
 (setq org-journal-skip-carryover-drawers '("LOGBOOK"))
 (setq org-startup-with-inline-images t)
+(setq org-hide-emphasis-markers t)
 (require 'org-habit)
 (after! org
   (add-to-list 'org-modules 'org-habit t)
@@ -160,38 +195,9 @@ Do not log rest resquest to *Messages*.
   (define-key org-mode-map (kbd "C-c C-r") verb-command-map)
   )
 
-(defun custom/journal-template-header ()
-  "Function to insert a clocktable after creating a new journal"
-  (interactive)
-  (save-excursion
-    (let* ((odoo-url "[[https://odoo.inoio.de/web?#page=0&limit=80&view_type=list&model=hr.analytic.timesheet&action=731][Booking]]")
-          (template (concat "\n\n"
-                            "#+BEGIN: clocktable :scope subtree :maxlevel 2\n"
-                            "#+END:\n\n"
-                            "- [ ] "
-                            odoo-url
-                            "\n\n")))
-      (goto-char (point-max))
-      (unless (search-backward template nil t)
-        (insert template)))))
-
 (add-hook! org-journal-after-header-create #'custom/journal-template-header)
 (add-hook! org-mode auto-save-visited-mode)
 (add-hook! 'auto-save-hook #'org-save-all-org-buffers)
-
-(after! (org-roam server)
-  (org-roam-server-mode +1))
-#+end_src
-
-* Helper functions
-
-#+begin_src emacs-lisp
-(defun custom/kill-this-buffer ()
-  "Kill the current buffer"
-  (interactive)
-  (kill-buffer (current-buffer)))
-
-(global-set-key (kbd "C-x k") 'custom/kill-this-buffer)
 #+end_src
 
 * Various keybindings
@@ -208,13 +214,18 @@ Do not log rest resquest to *Messages*.
         :desc "Open next entry" ">" #'org-journal-next-entry
         :desc "Search journal" "s" #'org-journal-search-forever
         (:prefix ("t" . "tools")
-                :desc "Export" "e" #'org-export-dispatch
-                :desc "Agenda" "a" #'org-agenda-list
+                :desc "Create export" "e" #'org-export-dispatch
+                :desc "Open agenda" "a" #'org-agenda-list
                 )
-        (:prefix ("c" . "clock/dates")
+        (:prefix ("l" . "links")
+                :desc "Insert/Edit link" "l" #'org-insert-link
+                )
+        (:prefix ("c" . "clock")
                 :desc "Clock in" "i" #'org-clock-in
                 :desc "Clock out" "o" #'org-clock-out
                 :desc "Goto active clock" "g" #'org-clock-goto
+                )
+        (:prefix ("d" . "dates")
                 :desc "Insert timestamp" "t" #'org-time-stamp
                 :desc "Insert deadline" "d" #'org-deadline
                 :desc "Insert schedule" "s" #'org-schedule
@@ -226,6 +237,9 @@ Do not log rest resquest to *Messages*.
                 :desc "Find file" "f" #'org-roam-find-file
                 )))
 #+end_src
+
+#+RESULTS:
+: org-roam-find-file
 
 
 * Integrations with private information
