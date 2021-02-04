@@ -160,15 +160,22 @@ Do not log rest resquest to *Messages*.
   (define-key org-mode-map (kbd "C-c C-r") verb-command-map)
   )
 
-;; Insert a clocktable in each journal entry after creation
-(defun journal-template ()
+(defun custom/journal-template-header ()
+  "Function to insert a clocktable after creating a new journal"
+  (interactive)
   (save-excursion
-    (let ((template "\n\n#+BEGIN: clocktable :scope subtree :maxlevel 2\n#+END:\n\n[[https://odoo.inoio.de/web?#page=0&limit=80&view_type=list&model=hr.analytic.timesheet&action=731][goto ODOO]]"))
+    (let* ((odoo-url "[[https://odoo.inoio.de/web?#page=0&limit=80&view_type=list&model=hr.analytic.timesheet&action=731][Booking]]")
+          (template (concat "\n\n"
+                            "#+BEGIN: clocktable :scope subtree :maxlevel 2\n"
+                            "#+END:\n\n"
+                            "- [ ] "
+                            odoo-url
+                            "\n\n")))
       (goto-char (point-max))
       (unless (search-backward template nil t)
-        (insert template "\n\n")))))
+        (insert template)))))
 
-(add-hook! org-journal-after-header-create #'journal-template)
+(add-hook! org-journal-after-header-create #'custom/journal-template-header)
 (add-hook! org-mode auto-save-visited-mode)
 (add-hook! 'auto-save-hook #'org-save-all-org-buffers)
 
@@ -209,6 +216,8 @@ Do not log rest resquest to *Messages*.
                 :desc "Clock out" "o" #'org-clock-out
                 :desc "Goto active clock" "g" #'org-clock-goto
                 :desc "Insert timestamp" "t" #'org-time-stamp
+                :desc "Insert deadline" "d" #'org-deadline
+                :desc "Insert schedule" "s" #'org-schedule
                 )
         (:prefix ("p" . "properties")
                 :desc "Set property" "p" #'org-set-property
