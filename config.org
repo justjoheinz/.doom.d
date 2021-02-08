@@ -18,7 +18,23 @@
 #+begin_src emacs-lisp
 (setq exec-path (append exec-path '("/usr/local/bin")))
 (load! "helper" "~/.roswell")
+
+(after! sly
+  (setq sly-complete-symbol-function 'sly-flex-completions))
+
+(add-hook! 'sly-mode-hook
+  (defun +common-lisp-init-sly-h ()
+    "Attempt to auto-start sly when opening a lisp buffer."
+      (cond ((or (doom-temp-buffer-p (current-buffer))
+                 (sly-connected-p)))
+            (t (let ((sly-auto-start 'always))
+                 (sly-auto-start)
+                 (add-hook 'kill-buffer-hook #'+common-lisp--cleanup-sly-maybe-h nil t))))))
+
 #+end_src
+
+#+RESULTS:
+| sly-stickers-shortcut-mode | sly-trace-dialog-shortcut-mode | evil-normalize-keymaps | sly-setup-first-change-hook | sly--setup-completion | +common-lisp-init-sly-h |
 
 ** UI setup
 
@@ -41,8 +57,8 @@ Just use a nice and big font and the default theme. And do not display line numb
 Additionally we can set the browser to the internal webkit browser if the xwidgets feature is available.
 
 #+begin_src emacs-lisp
-(when (featurep 'xwidget-internal)
-  (setq browse-url-browser-function 'xwidget-webkit-browse-url))
+;;(when (featurep 'xwidget-internal)
+;;  (setq browse-url-browser-function 'xwidget-webkit-browse-url))
 #+end_src
 
 Set up Alt-Cmd-left/right to switch between buffers:
