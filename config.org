@@ -161,6 +161,18 @@ Template function for new org-journal entries.
 : custom/journal-template-header
 
 
+** Calendar setup
+
+#+begin_src emacs-lisp
+(after! calfw
+  (setq cfw:display-calendar-holidays nil
+        calendar-week-start-day 1)
+  )
+#+end_src
+
+#+RESULTS:
+: 1
+
 ** org mode setup
 
 ** TODO org mode setup needs more structure
@@ -232,6 +244,7 @@ Template function for new org-journal entries.
         (:prefix ("t" . "tools")
                 :desc "Create export" "e" #'org-export-dispatch
                 :desc "Open agenda" "a" #'org-agenda-list
+                :desc "Open calendar" "c" #'cfw:open-org-calendar
                 )
         (:prefix ("l" . "links")
                 :desc "Insert/Edit link" "l" #'org-insert-link
