@@ -51,6 +51,8 @@ Just use a nice and big font and the default theme. And do not display line numb
 (add-to-list 'initial-frame-alist '(width . 90))
 
 (blink-cursor-mode +1)
+;; do not stop blinking when idle
+(blink-current-blinks 0)
 #+end_src
 
 
