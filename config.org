@@ -250,23 +250,25 @@ Template function for new org-journal entries.
                 :desc "Open calendar" "c" #'cfw:open-org-calendar
                 )
         (:prefix ("l" . "links")
-                :desc "Insert/Edit link" "l" #'org-insert-link
+                :desc "org-insert-link" "i" #'org-insert-link
                 )
         (:prefix ("c" . "clock")
-                :desc "Clock in" "i" #'org-clock-in
-                :desc "Clock out" "o" #'org-clock-out
-                :desc "Goto active clock" "g" #'org-clock-goto
+                :desc "org-clock-in" "i" #'org-clock-in
+                :desc "org-clock-out" "o" #'org-clock-out
+                :desc "org-clock-goto" "g" #'org-clock-goto
                 )
         (:prefix ("d" . "dates")
-                :desc "Insert timestamp" "t" #'org-time-stamp
-                :desc "Insert deadline" "d" #'org-deadline
-                :desc "Insert schedule" "s" #'org-schedule
+                :desc "org-time-stamp" "t" #'org-time-stamp
+                :desc "org-deadline" "d" #'org-deadline
+                :desc "org-schedule" "s" #'org-schedule
                 )
         (:prefix ("p" . "properties")
-                :desc "Set property" "p" #'org-set-property
+                :desc "org-set-property" "p" #'org-set-property
                 )
         (:prefix ("r" . "roam")
-                :desc "Find file" "f" #'org-roam-find-file
+                :desc "org-roam-find-file" "f" #'org-roam-find-file
+                :desc "org-roam" "o" #'org-roam
+                :desc "org-roam-server" "s" #'org-roam-server
                 )))
 #+end_src
 
