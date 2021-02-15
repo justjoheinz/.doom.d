@@ -1,6 +1,5 @@
 custom.el
 config.el
 *~
-+*.org
 +*.el
 sandbox.el
