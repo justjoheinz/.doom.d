@@ -19,8 +19,11 @@
 (setq exec-path (append exec-path '("/usr/local/bin")))
 (load! "helper" "~/.roswell")
 
-(after! sly
-  (setq sly-complete-symbol-function 'sly-flex-completions))
+;;(after! sly
+;;  (setq sly-complete-symbol-function 'sly-flex-completions))
+
+;;(after! lisp
+;;  (setq company-backends '(company-yasnippet company-capf)))
 
 (add-hook! 'sly-mode-hook
   (defun +common-lisp-init-sly-h ()
@@ -42,7 +45,7 @@ Just use a nice and big font and the default theme. And do not display line numb
 
 #+begin_src emacs-lisp
 (setq doom-theme 'doom-spacegrey
-      doom-font (font-spec :family "Fira Code" :size 16)
+      doom-font (font-spec :family "Fira Code" :size 14)
       display-line-numbers-type nil
       doom-themes-enable-bold t
       doom-themes-enable-italic t)
