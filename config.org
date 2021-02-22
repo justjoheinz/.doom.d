@@ -25,6 +25,8 @@
 ;;(after! lisp
 ;;  (setq company-backends '(company-yasnippet company-capf)))
 
+;;(map! :after sly-mrepl-mode :desc "Search history" "C-r" #'isearch-backward)
+
 (add-hook! 'sly-mode-hook
   (defun +common-lisp-init-sly-h ()
     "Attempt to auto-start sly when opening a lisp buffer."
@@ -35,9 +37,6 @@
                  (add-hook 'kill-buffer-hook #'+common-lisp--cleanup-sly-maybe-h nil t))))))
 
 #+end_src
-
-#+RESULTS:
-| sly-stickers-shortcut-mode | sly-trace-dialog-shortcut-mode | evil-normalize-keymaps | sly-setup-first-change-hook | sly--setup-completion | +common-lisp-init-sly-h |
 
 ** UI setup
 
