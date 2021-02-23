@@ -8,6 +8,7 @@
 (package! olivetti)
 (package! org-roam-server)
 (package! verb)
+(package! super-save)
 ;; To install SOME-PACKAGE from MELPA, ELPA or emacsmirror:
 ;(package! some-package)
 

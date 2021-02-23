@@ -11,7 +11,18 @@
 - Edit code blocks with =C-c '= for code completion and the nifty features of the major emacs lisp mode.
 - Do not forget to mark source blocks with =emacs-lisp= otherwise they do not get tangled into the resulting =config.el= file.
 
+
 * Config.org
+
+** Super save mode
+
+#+begin_src emacs-lisp
+(use-package! super-save
+  :ensure t
+  :config
+  (setq super-save-auto-save-when-idle t)
+  (super-save-mode +1))
+#+end_src
 
 ** Common lisp and roswell setup
 
