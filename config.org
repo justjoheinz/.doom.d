@@ -24,14 +24,15 @@
   (super-save-mode +1))
 #+end_src
 
+
 ** Common lisp and roswell setup
 
 #+begin_src emacs-lisp
 (setq exec-path (append exec-path '("/usr/local/bin")))
 (load! "helper" "~/.roswell")
 
-;;(after! sly
-;;  (setq sly-complete-symbol-function 'sly-flex-completions))
+(after! sly
+  (setq sly-complete-symbol-function 'sly-flex-completions))
 
 ;;(after! lisp
 ;;  (setq company-backends '(company-yasnippet company-capf)))
@@ -49,6 +50,8 @@
 
 #+end_src
 
+#+RESULTS:
+
 ** UI setup
 
 Just use a nice and big font and the default theme. And do not display line number inside the buffer. Also enlarge the window to full screen height on startup. Cursor blinks since I usually have a hard time finding it on the screen. You can easily disable this by removing the line, if it is too disturbing.
@@ -62,12 +65,19 @@ Just use a nice and big font and the default theme. And do not display line numb
 
 (add-to-list 'initial-frame-alist '(fullscreen . fullheight))
 (add-to-list 'initial-frame-alist '(width . 90))
+(add-to-list 'default-frame-alist '(inhibit-double-buffering . t))
 
 ;; enable blinking cursor
 (blink-cursor-mode +1)
 ;; do not stop blinking when idle
 (setq blink-cursor-blinks 0)
+;; ispell dictionary
+(setq ispell-dictionary "german8")
+(map! :desc "flyspell-word" "C-M-y" 'flyspell-correct-word-before-point
+      :desc "flyspell-buffer" "<M-f8>" 'flyspell-buffer)
 #+end_src
+
+#+RESULTS:
 
 
 Additionally we can set the browser to the internal webkit browser if the xwidgets feature is available.
@@ -84,6 +94,41 @@ Set up Alt-Cmd-left/right to switch between buffers:
   (map! :desc "Switch to previous buffer" "<M-s-left>" 'previous-buffer
         :desc "Switch to next buffer" "<M-s-right>" 'next-buffer))
 #+end_src
+
+Setup "C-d" to duplicate a line:
+
+#+begin_src emacs-lisp
+(defun duplicate-line()
+  (interactive)
+  (move-beginning-of-line 1)
+  (kill-line)
+  (yank)
+  (open-line 1)
+  (next-line 1)
+  (yank)
+)
+(map! :after evil
+      :map evil-motion-state-map
+      "C-d" nil)
+(map! :after evil
+      :map evil-insert-state-map
+      "C-d" nil)
+(map! :after evil
+      :map evil-replace-state-map
+      "C-d" nil)
+(map! :desc "Duplicate line" "C-d" #'duplicate-line)
+#+end_src
+
+#+RESULTS:
+
+** User setup
+
+#+begin_src emacs-lisp
+(setq user-mail-address (getenv "EMAIL"))
+#+end_src
+
+#+RESULTS:
+: justjoheinz@gmail.com
 
 ** Company setup
 
@@ -239,9 +284,9 @@ Template function for new org-journal entries.
   (define-key org-mode-map (kbd "C-c C-r") verb-command-map)
   )
 
-(add-hook! org-journal-after-header-create #'custom/journal-template-header)
-(add-hook! org-mode auto-save-visited-mode)
-(add-hook! 'auto-save-hook #'org-save-all-org-buffers)
+; (add-hook! org-journal-after-header-create #'custom/journal-template-header)
+; (add-hook! org-mode auto-save-visited-mode)
+; (add-hook! 'auto-save-hook #'org-save-all-org-buffers)
 #+end_src
 
 * Various keybindings
@@ -288,22 +333,29 @@ Template function for new org-journal entries.
 #+RESULTS:
 : org-roam-find-file
 
+* haskell
 
-* Integrations with private information
+#+begin_src emacs-lisp
+(after! haskell
+  (setq lsp-haskell-formatting-provider "ormolu")
+  (setq haskell-tags-on-save t)
+  (setq haskell-stylish-on-save t)
+  (setq haskell-doc-mode t)
+  (map! :map haskell-mode-map
+        :localleader
+        :desc "haskell-hoogle" "o" #'haskell-hoogle-lookup-from-local
+        :desc "lsp-restart-workspace" "r" #'lsp-restart-workspace
+  ))
 
-You can toggle the inclusion of integration by commenting sections of the org file using =C-c ;= or by creating an empty dummy file.
+(add-hook! 'haskell-mode-hook 'haskell-auto-insert-module-template)
+(add-hook! 'haskell-mode-hook 'haskell-decl-scan-mode)
+#+end_src
 
-** GCal integration
+#+RESULTS:
 
-#+include: "+gcal.org"
+* graphviz
 
-** User integration
-
-#+include: "+user.org"
-
-** Finance data
-
-#+include: "+finance.org"
+Installed via package.el
 
 
 * Misc

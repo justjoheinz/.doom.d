@@ -9,6 +9,14 @@
 (package! org-roam-server)
 (package! verb)
 (package! super-save)
+
+;; graphviz
+(package! graphviz-dot-mode)
+
+;;sly
+(package! sly-asdf)
+(package! sly-quicklisp)
+
 ;; To install SOME-PACKAGE from MELPA, ELPA or emacsmirror:
 ;(package! some-package)
 
@@ -51,3 +59,4 @@
 ;(unpin! pinned-package another-pinned-package)
 ;; ...Or *all* packages (NOT RECOMMENDED; will likely break things)
 ;(unpin! t)
+;
