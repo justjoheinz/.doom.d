@@ -9,13 +9,18 @@
 (package! org-roam-server)
 (package! verb)
 (package! super-save)
-
+(package! framemove)
 ;; graphviz
 (package! graphviz-dot-mode)
 
 ;;sly
 (package! sly-asdf)
 (package! sly-quicklisp)
+
+;; lean
+(package! lean4-mode :recipe
+  (:host github
+   :repo "leanprover/lean4-mode"))
 
 ;; To install SOME-PACKAGE from MELPA, ELPA or emacsmirror:
 ;(package! some-package)

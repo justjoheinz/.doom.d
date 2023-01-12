@@ -31,23 +31,22 @@
 (setq exec-path (append exec-path '("/usr/local/bin")))
 (load! "helper" "~/.roswell")
 
+
 (after! sly
-  (setq sly-complete-symbol-function 'sly-flex-completions))
-
-;;(after! lisp
-;;  (setq company-backends '(company-yasnippet company-capf)))
-
-;;(map! :after sly-mrepl-mode :desc "Search history" "C-r" #'isearch-backward)
+  (setq sly-complete-symbol-function 'sly-flex-completions)
+  (setq sly-command-switch-to-existing-lisp 'always)
+  (set-popup-rules!
+   '(("^\\*sly-mrepl"
+      :side right
+      :width 200
+      :quit nil
+      :modeline t
+      :ttl nil))))
 
 (add-hook! 'sly-mode-hook
-  (defun +common-lisp-init-sly-h ()
-    "Attempt to auto-start sly when opening a lisp buffer."
-      (cond ((or (doom-temp-buffer-p (current-buffer))
-                 (sly-connected-p)))
-            (t (let ((sly-auto-start 'always))
-                 (sly-auto-start)
-                 (add-hook 'kill-buffer-hook #'+common-lisp--cleanup-sly-maybe-h nil t))))))
-
+          (lambda ()
+            (unless (sly-connected-p)
+              (save-excursion (sly)))))
 #+end_src
 
 #+RESULTS:
@@ -57,7 +56,7 @@
 Just use a nice and big font and the default theme. And do not display line number inside the buffer. Also enlarge the window to full screen height on startup. Cursor blinks since I usually have a hard time finding it on the screen. You can easily disable this by removing the line, if it is too disturbing.
 
 #+begin_src emacs-lisp
-(setq doom-theme 'doom-spacegrey
+(setq doom-theme 'doom-monokai-pro
       doom-font (font-spec :family "Fira Code" :size 14)
       display-line-numbers-type nil
       doom-themes-enable-bold t
@@ -166,9 +165,21 @@ Bind the CMD key to normal copy/cut/paste operations.
 (when IS-MAC
   (bind-key "s-x" 'kill-region)
   (bind-key "s-c" 'evil-yank)
-  (bind-key "s-v" 'evil-paste-before)
+  (bind-key "s-v" 'evil-paste-before-cursor-after)
 )
 #+end_src
+
+** Frame and Window navigation
+
+#+begin_src emacs-lisp
+(framemove-default-keybindings)
+(windmove-default-keybindings 'meta)
+(setq framemove-hook-into-windmove t)
+#+end_src
+
+#+RESULTS:
+: t
+
 
 ** Olivetti mode
 
@@ -286,7 +297,7 @@ Template function for new org-journal entries.
 
 ; (add-hook! org-journal-after-header-create #'custom/journal-template-header)
 ; (add-hook! org-mode auto-save-visited-mode)
-; (add-hook! 'auto-save-hook #'org-save-all-org-buffers)
+(add-hook! 'auto-save-hook #'org-save-all-org-buffers)
 #+end_src
 
 * Various keybindings
