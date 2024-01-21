@@ -31,16 +31,22 @@
 (setq exec-path (append exec-path '("/usr/local/bin")))
 (load! "helper" "~/.roswell")
 
+;; setup log4sly
+(load! "log4sly-setup" "~/.roswell/lisp/quicklisp")
+(global-log4sly-mode 1)
+
+
+(map! (:map sly-inspector-mode-map
+       :n "q" #'sly-inspector-quit))
 
 (after! sly
   (setq sly-complete-symbol-function 'sly-flex-completions)
   (setq sly-command-switch-to-existing-lisp 'always)
   (set-popup-rules!
    '(("^\\*sly-mrepl"
-      :side right
+      :side left
       :width 200
       :quit nil
-      :modeline t
       :ttl nil))))
 
 (add-hook! 'sly-mode-hook
@@ -59,8 +65,13 @@ Just use a nice and big font and the default theme. And do not display line numb
 (setq doom-theme 'doom-monokai-pro
       doom-font (font-spec :family "Fira Code" :size 14)
       display-line-numbers-type nil
+;; font stuff
       doom-themes-enable-bold t
-      doom-themes-enable-italic t)
+      doom-themes-enable-italic t
+;; icon
+      fancy-splash-image (concat doom-private-dir "icon.png")
+;; default browser
+      browse-url-browser-function 'xwidget-webkit-browse-url)
 
 (add-to-list 'initial-frame-alist '(fullscreen . fullheight))
 (add-to-list 'initial-frame-alist '(width . 90))
@@ -78,13 +89,6 @@ Just use a nice and big font and the default theme. And do not display line numb
 
 #+RESULTS:
 
-
-Additionally we can set the browser to the internal webkit browser if the xwidgets feature is available.
-
-#+begin_src emacs-lisp
-;;(when (featurep 'xwidget-internal)
-;;  (setq browse-url-browser-function 'xwidget-webkit-browse-url))
-#+end_src
 
 Set up Alt-Cmd-left/right to switch between buffers:
 
@@ -253,7 +257,6 @@ Template function for new org-journal entries.
 ;; change `org-directory'. It must be set before org loads!
 (setq org-directory "~/org/")
 (setq org-journal-dir "~/org/journal/")
-(setq org-roam-directory "~/org/roam/")
 (setq org-agenda-files '("~/org/" "~/org/roam/" "~/org/journal/"))
 (setq org-journal-time-format "")
 (setq org-tag-alist '(("private" . ?p)
@@ -298,6 +301,20 @@ Template function for new org-journal entries.
 ; (add-hook! org-journal-after-header-create #'custom/journal-template-header)
 ; (add-hook! org-mode auto-save-visited-mode)
 (add-hook! 'auto-save-hook #'org-save-all-org-buffers)
+(use-package! org-roam
+  :custom
+  (org-roam-directory "~/org/roam")
+  :config
+  (org-roam-setup))
+
+(defadvice! yeet/org-roam-in-own-workspace-a (&rest _)
+  "Open all roam buffers in there own workspace."
+  :before #'org-roam-node-find
+  :before #'org-roam-node-random
+  :before #'org-roam-buffer-display-dedicated
+  :before #'org-roam-buffer-toggle
+  (when (modulep! :ui workspaces)
+    (+workspace-switch "*roam*" t)))
 #+end_src
 
 * Various keybindings
@@ -335,9 +352,9 @@ Template function for new org-journal entries.
                 :desc "org-set-property" "p" #'org-set-property
                 )
         (:prefix ("r" . "roam")
-                :desc "org-roam-find-file" "f" #'org-roam-find-file
-                :desc "org-roam" "o" #'org-roam
-                :desc "org-roam-server" "s" #'org-roam-server
+                :desc "org-roam-node-find" "f" #'org-roam-node-find
+                :desc "org-roam-node-insert" "i" #'org-roam-node-insert
+                :desc "org-roam-buffer-toggle" "t" #'org-roam-buffer-toggle
                 )))
 #+end_src
 
@@ -364,10 +381,72 @@ Template function for new org-journal entries.
 
 #+RESULTS:
 
+* swagger client
+
+Installed via packages.el
+
+#+begin_src emacs-lisp
+(use-package! swagg
+  :config
+  (setq
+   swagg-definitions
+   '((:name "Local"
+      :yaml "http://localhost:5000/openapi.yml"
+      :base "http://localhost:5000")
+     (:name "GitHub"
+      :json "https://raw.githubusercontent.com/github/rest-api-description/main/descriptions/api.github.com/api.github.com.json"
+      :base "https://api.github.com")
+     (:name "GitLab"
+      :yaml "https://gitlab.com/gitlab-org/gitlab/-/raw/master/doc/api/openapi/openapi.yaml"
+      :base "https://gitlab.com/api"))))
+
+(defadvice! mk/swagg-in-own-workspace-a (&rest _)
+  "Open all swagg buffers in there own workspace."
+  :before #'swagg-request
+  (when (modulep! :ui workspaces)
+    (+workspace-switch "*swagg-result*" t)))
+
+
+;; see https://github.com/isamert/swagg.el
+;;
+;; (setq
+;;  swagg-definitions
+;;  '((:name "..."
+;;     :json "..."
+;;     :base "..."
+;;     ;; To bind query parameters:
+;;     :query '((param1 . "somevalue")
+;;              (param2 . "somevalue2"))
+;;     ;; To bind headers:
+;;     :header '((token . "12345")
+;;               (another-header . "value"))
+;;     ;; To bind anything with given name:
+;;     :any ((param . "22")
+;;           (token . "000")))
+;;    ...))
+
+#+end_src
+
+#+RESULTS:
+
 * graphviz
 
 Installed via package.el
 
+
+* Copilot
+
+#+begin_src emacs-lisp
+(use-package! copilot
+  :config
+  (setq copilot-node-executable "/Users/markusklink/.nodenv/versions/18.18.2/bin/node")
+  :hook (prog-mode . copilot-mode)
+  :bind (:map copilot-completion-map
+              ("<tab>" . 'copilot-accept-completion)
+              ("TAB" . 'copilot-accept-completion)
+              ("C-TAB" . 'copilot-accept-completion-by-word)
+              ("C-<tab>" . 'copilot-accept-completion-by-word)))
+#+end_src
 
 * Misc
 
