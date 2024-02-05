@@ -41,7 +41,7 @@
 
 (after! sly
   (setq sly-complete-symbol-function 'sly-flex-completions)
-  (setq sly-command-switch-to-existing-lisp 'always)
+  (setq sly-command-switch-to-existing-lisp 'ask)
   (set-popup-rules!
    '(("^\\*sly-mrepl"
       :side left
