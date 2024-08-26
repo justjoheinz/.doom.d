@@ -31,28 +31,32 @@
 (setq exec-path (append exec-path '("/usr/local/bin")))
 (load! "helper" "~/.roswell")
 
-;; setup log4sly
-(load! "log4sly-setup" "~/.roswell/lisp/quicklisp")
-(global-log4sly-mode 1)
-
-
 (map! (:map sly-inspector-mode-map
        :n "q" #'sly-inspector-quit))
 
 (after! sly
   (setq sly-complete-symbol-function 'sly-flex-completions)
   (setq sly-command-switch-to-existing-lisp 'ask)
+  (setq sly-lisp-implementations
+      '((sbcl-ros ("ros" "run") :coding-system utf-8-unix)
+        (qlot ("qlot" "exec" "sbcl") :coding-system utf-8-unix)))
   (set-popup-rules!
    '(("^\\*sly-mrepl"
       :side left
       :width 200
       :quit nil
-      :ttl nil))))
+      :ttl nil)))
+  (map! :n :desc "Jump to definition" "M-." #'sly-edit-definition))
 
 (add-hook! 'sly-mode-hook
           (lambda ()
             (unless (sly-connected-p)
               (save-excursion (sly)))))
+
+
+(map! :after evil
+      :nvi "M-." #'sly-edit-definition
+      :nvi "M-," #'sly-pop-find-definition-stack)
 #+end_src
 
 #+RESULTS:
@@ -62,8 +66,8 @@
 Just use a nice and big font and the default theme. And do not display line number inside the buffer. Also enlarge the window to full screen height on startup. Cursor blinks since I usually have a hard time finding it on the screen. You can easily disable this by removing the line, if it is too disturbing.
 
 #+begin_src emacs-lisp
-(setq doom-theme 'doom-monokai-pro
-      doom-font (font-spec :family "Fira Code" :size 14)
+(setq doom-theme 'doom-homage-white
+      doom-font (font-spec :family "JetBrains Mono" :size 15)
       display-line-numbers-type nil
 ;; font stuff
       doom-themes-enable-bold t
@@ -71,7 +75,8 @@ Just use a nice and big font and the default theme. And do not display line numb
 ;; icon
       fancy-splash-image (concat doom-private-dir "icon.png")
 ;; default browser
-      browse-url-browser-function 'xwidget-webkit-browse-url)
+      ;;browse-url-browser-function 'xwidget-webkit-browse-url)
+      browse-url-browser-function 'browse-url-default-macosx-browser)
 
 (add-to-list 'initial-frame-alist '(fullscreen . fullheight))
 (add-to-list 'initial-frame-alist '(width . 90))
@@ -120,6 +125,7 @@ Setup "C-d" to duplicate a line:
       :map evil-replace-state-map
       "C-d" nil)
 (map! :desc "Duplicate line" "C-d" #'duplicate-line)
+
 #+end_src
 
 #+RESULTS:
@@ -184,6 +190,13 @@ Bind the CMD key to normal copy/cut/paste operations.
 #+RESULTS:
 : t
 
+** Vale
+
+#+begin_src emacs-lisp
+(use-package! flycheck-vale
+  :config (flycheck-vale-setup)
+)
+#+end_src
 
 ** Olivetti mode
 
@@ -267,36 +280,38 @@ Template function for new org-journal entries.
 (setq org-hide-emphasis-markers t)
 (require 'org-habit)
 (after! org
-  (add-to-list 'org-modules 'org-habit t)
-  (setq org-agenda-files '("~/org" "~/org/roam" "~/org/journal"))
-  (setq org-journal-enable-agenda-integration t)
-  (setq org-tags-column 70)
-  (org-agenda-files t)
+        (add-to-list 'org-modules 'org-habit t)
+        (setq org-agenda-files '("~/org" "~/org/roam" "~/org/journal"))
+        (setq org-journal-enable-agenda-integration t)
+        (setq org-tags-column 70)
+        (org-agenda-files t)
+        (global-org-modern-mode)
 
-  (setq org-latex-classes '(("article" "\\documentclass[11pt]{scrartcl}"
-                             ("\\section{%s}" . "\\section*{%s}")
-                             ("\\subsection{%s}" . "\\subsection*{%s}")
-                             ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
-                             ("\\paragraph{%s}" . "\\paragraph*{%s}")
-                             ("\\subparagraph{%s}" . "\\subparagraph*{%s}"))
-                            ("report" "\\documentclass[11pt]{scrreport}"
-                             ("\\part{%s}" . "\\part*{%s}")
-                             ("\\chapter{%s}" . "\\chapter*{%s}")
-                             ("\\section{%s}" . "\\section*{%s}")
-                             ("\\subsection{%s}" . "\\subsection*{%s}")
-                             ("\\subsubsection{%s}" . "\\subsubsection*{%s}"))
-                            ("book" "\\documentclass[11pt]{scrbook}"
-                             ("\\part{%s}" . "\\part*{%s}")
-                             ("\\chapter{%s}" . "\\chapter*{%s}")
-                             ("\\section{%s}" . "\\section*{%s}")
-                             ("\\subsection{%s}" . "\\subsection*{%s}")
-                             ("\\subsubsection{%s}" . "\\subsubsection*{%s}"))))
-  (add-to-list 'org-latex-packages-alist
-               '("AUTO" "babel" t ("pdflatex")))
-  (setq org-clock-persist t)
-  (org-clock-persistence-insinuate)
-  (define-key org-mode-map (kbd "C-c C-r") verb-command-map)
-  )
+        (setq org-latex-classes '(("article" "\\documentclass[11pt]{scrartcl}"
+                                   ("\\section{%s}" . "\\section*{%s}")
+                                   ("\\subsection{%s}" . "\\subsection*{%s}")
+                                   ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
+                                   ("\\paragraph{%s}" . "\\paragraph*{%s}")
+                                   ("\\subparagraph{%s}" . "\\subparagraph*{%s}"))
+                                  ("report" "\\documentclass[11pt]{scrreport}"
+                                   ("\\part{%s}" . "\\part*{%s}")
+                                   ("\\chapter{%s}" . "\\chapter*{%s}")
+                                   ("\\section{%s}" . "\\section*{%s}")
+                                   ("\\subsection{%s}" . "\\subsection*{%s}")
+                                   ("\\subsubsection{%s}" . "\\subsubsection*{%s}"))
+                                  ("book" "\\documentclass[11pt]{scrbook}"
+                                   ("\\part{%s}" . "\\part*{%s}")
+                                   ("\\chapter{%s}" . "\\chapter*{%s}")
+                                   ("\\section{%s}" . "\\section*{%s}")
+                                   ("\\subsection{%s}" . "\\subsection*{%s}")
+                                   ("\\subsubsection{%s}" . "\\subsubsection*{%s}"))))
+        (add-to-list 'org-latex-packages-alist
+                     '("AUTO" "babel" t ("pdflatex")))
+        (setf org-support-shift-select t)
+        (setq org-clock-persist t)
+        (org-clock-persistence-insinuate)
+        (define-key org-mode-map (kbd "C-c C-r") verb-command-map)
+        )
 
 ; (add-hook! org-journal-after-header-create #'custom/journal-template-header)
 ; (add-hook! org-mode auto-save-visited-mode)
@@ -305,10 +320,32 @@ Template function for new org-journal entries.
   :custom
   (org-roam-directory "~/org/roam")
   :config
+  (setq org-roam-capture-templates
+      '(
+        ("d" "default" plain "%?"
+         :target (file+head "%<%Y%m%d%H%M%S>-${slug}.org" "#+title: ${title}")
+         :unnarrowed t)
+        ("c" "code snippet" entry "* %?\n\n#+begin_src %^{lang}\n%c\n#+end_src\n"
+         :target (file+olp "%<%Y%m%d%H%M%S>-${slug}.org" ("Snippets"))
+         :empty-lines-before 1)
+        )
+      )
   (org-roam-setup))
 
+(use-package! websocket
+  :after org-roam)
+
+(use-package! org-roam-ui
+    :after org-roam
+    :hook (after-init . org-roam-ui-mode)
+    :config
+    (setq org-roam-ui-sync-theme t
+          org-roam-ui-follow t
+          org-roam-ui-update-on-save t
+          org-roam-ui-open-on-start t))
+
 (defadvice! yeet/org-roam-in-own-workspace-a (&rest _)
-  "Open all roam buffers in there own workspace."
+  "Open all roam buffers in their own workspace."
   :before #'org-roam-node-find
   :before #'org-roam-node-random
   :before #'org-roam-buffer-display-dedicated
@@ -316,6 +353,8 @@ Template function for new org-journal entries.
   (when (modulep! :ui workspaces)
     (+workspace-switch "*roam*" t)))
 #+end_src
+
+#+RESULTS:
 
 * Various keybindings
 
@@ -355,6 +394,7 @@ Template function for new org-journal entries.
                 :desc "org-roam-node-find" "f" #'org-roam-node-find
                 :desc "org-roam-node-insert" "i" #'org-roam-node-insert
                 :desc "org-roam-buffer-toggle" "t" #'org-roam-buffer-toggle
+                :desc "org-roam-capture" "x" #'org-roam-capture
                 )))
 #+end_src
 
@@ -438,8 +478,9 @@ Installed via package.el
 
 #+begin_src emacs-lisp
 (use-package! copilot
-  :config
-  (setq copilot-node-executable "/Users/markusklink/.nodenv/versions/18.18.2/bin/node")
+  :config (setq copilot-node-executable "/Users/markusklink/.nodenv/versions/18.18.2/bin/node"
+                copilot-indent-offset-warning-disable t)
+
   :hook (prog-mode . copilot-mode)
   :bind (:map copilot-completion-map
               ("<tab>" . 'copilot-accept-completion)

@@ -10,6 +10,10 @@
 (package! super-save)
 (package! framemove)
 
+;; vale based linter : https://vale.sh
+(package! flycheck-vale)
+
+
 ;; graphviz
 (package! graphviz-dot-mode)
 
@@ -23,7 +27,10 @@
 
 (package! copilot
   :recipe (:host github :repo "copilot-emacs/copilot.el" :files ("*.el" "dist")))
-
+;; org stuff
+(unpin! org-roam)
+(package! org-roam-ui)
+(package! org-modern)
 
 ;; To install SOME-PACKAGE from MELPA, ELPA or emacsmirror:
                                         ;(package! some-package)
